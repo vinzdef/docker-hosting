@@ -1,1 +1,2 @@
+#!/bin/sh
 docker-compose -f base.yml -f prod.yml up -d --remove-orphans
