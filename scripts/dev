@@ -1,0 +1,3 @@
+export COMPOSE_PROJECT_NAME=${PWD##*/}
+export VIRTUAL_HOST=${COMPOSE_PROJECT_NAME}.test
+docker-compose -f base.yml up -d --remove-orphans

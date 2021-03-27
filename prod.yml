@@ -1,0 +1,48 @@
+version: "3.5"
+
+volumes:
+  letsencrypt_:
+  certs_:
+
+services:
+  nginx:
+    ports:
+      - "443:443"    
+    volumes:
+      - letsencrypt_:/usr/share/nginx/html
+      - certs_:/etc/nginx/certs:ro
+      
+  dockergen:
+    volumes:
+      - letsencrypt_:/usr/share/nginx/html
+      - certs_:/etc/nginx/certs:ro
+    
+  letsencrypt:
+    image: vinzdef/reverse-proxy.letsencrypt
+    container_name: $COMPOSE_PROJECT_NAME.letsencrypt
+    restart: unless-stopped
+    depends_on:
+      - nginx
+      - dockergen
+    networks:
+      - tier_0
+      - front-tier
+      - tier_log
+    volumes:
+      - vhost_:/etc/nginx/vhost.d
+      - nginx_:/etc/nginx/conf.d
+      - letsencrypt_:/usr/share/nginx/html
+      - certs_:/etc/nginx/certs:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - LOGSTASH_TAGS="loadbalancer,proxy"
+      - NGINX_DOCKER_GEN_CONTAINER=$COMPOSE_PROJECT_NAME.dockergen
+      - NGINX_PROXY_CONTAINER=$COMPOSE_PROJECT_NAME.nginx
+
+  registry:
+    environment:
+      LETSENCRYPT_HOST: registry.${VIRTUAL_HOST}
+
+  portainer:
+    environment:
+      LETSENCRYPT_HOST: portainer.${VIRTUAL_HOST}
