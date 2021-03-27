@@ -1,2 +1,4 @@
 #!/bin/sh
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+source .env
 docker-compose -f base.yml -f prod.yml up -d --remove-orphans
