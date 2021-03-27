@@ -23,7 +23,7 @@ services:
     environment:
       LOGSTASH_TAGS: reverse-proxy
     labels:
-        com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
     ports:
       - "80:80"
     networks:
@@ -47,7 +47,7 @@ services:
     volumes:
       - vhost_:/etc/nginx/vhost.d
       - nginx_:/etc/nginx/conf.d
-      - /var/run/docker.sock:/tmp/docker.sock:ro  
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 
   registry:
     image: registry:2
@@ -60,7 +60,7 @@ services:
       - registry_data:/var/lib/registry
     networks:
       front-tier:
-        aliases: 
+        aliases:
           - registry.${VIRTUAL_HOST}
 
   portainer:
@@ -75,5 +75,5 @@ services:
       - portainer_data:/data portainer/portainer
     networks:
       front-tier:
-        aliases: 
+        aliases:
           - portainer.${VIRTUAL_HOST}

@@ -7,16 +7,16 @@ volumes:
 services:
   nginx:
     ports:
-      - "443:443"    
+      - "443:443"
     volumes:
       - letsencrypt_:/usr/share/nginx/html
       - certs_:/etc/nginx/certs:ro
-      
+
   dockergen:
     volumes:
       - letsencrypt_:/usr/share/nginx/html
       - certs_:/etc/nginx/certs:ro
-    
+
   letsencrypt:
     image: vinzdef/reverse-proxy.letsencrypt
     container_name: $COMPOSE_PROJECT_NAME.letsencrypt
@@ -25,9 +25,9 @@ services:
       - nginx
       - dockergen
     networks:
-      - tier_0
+      - root-tier
       - front-tier
-      - tier_log
+      - log-tier
     volumes:
       - vhost_:/etc/nginx/vhost.d
       - nginx_:/etc/nginx/conf.d
